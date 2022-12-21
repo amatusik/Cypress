@@ -1,7 +1,12 @@
 import { generateFakeUserData } from "../../support/methods/generate-data";
 import { loginSelectors } from "../../support/selectors/login";
 import { commonSelectors } from "../../support/selectors/common";
-import { API, ALERTS, ROUTES, TRANSLATIONS } from "../../support/methods/helpers/constants";
+import {
+  API,
+  ALERTS,
+  ROUTES,
+  TRANSLATIONS,
+} from "../../support/methods/helpers/constants";
 
 const user = generateFakeUserData();
 
@@ -271,6 +276,19 @@ describe("API Tests", () => {
         .should("eq", 200);
     });
   });
+
+  it("Password reset through API", () => {
+    cy.request({
+      method: "POST",
+      url: API.PASSWORD_RESET,
+      form: true,
+      body: {
+        email: user.email.correct,
+      },
+    })
+      .its("status")
+      .should("eq", 200);
+  });
 });
 
 describe("Password reset", () => {
@@ -279,9 +297,14 @@ describe("Password reset", () => {
   });
 
   it("Password reset with invalid email shows proper validation message", () => {
-    cy.checkElementContainsValue(loginSelectors.containers.titleBox, "Can't log in?");
+    cy.checkElementContainsValue(
+      loginSelectors.containers.titleBox,
+      "Can't log in?"
+    );
     cy.fillInputField(loginSelectors.inputs.email, user.email.withoutDomain);
-    cy.findByRole("button", { name: /send link/i }).should("be.visible").click();
+    cy.findByRole("button", { name: /send link/i })
+      .should("be.visible")
+      .click();
     cy.checkIfTextIsShown(
       commonSelectors.alerts.errorMessage,
       ALERTS.invalidEmail()
@@ -290,8 +313,13 @@ describe("Password reset", () => {
   });
 
   it("Password reset without email shows proper validation message", () => {
-    cy.checkElementContainsValue(loginSelectors.containers.titleBox, "Can't log in?");
-    cy.findByRole("button", { name: /send link/i }).should("be.visible").click();
+    cy.checkElementContainsValue(
+      loginSelectors.containers.titleBox,
+      "Can't log in?"
+    );
+    cy.findByRole("button", { name: /send link/i })
+      .should("be.visible")
+      .click();
     cy.checkIfTextIsShown(
       commonSelectors.alerts.errorMessage,
       ALERTS.invalidEmail()
@@ -300,24 +328,37 @@ describe("Password reset", () => {
   });
 
   it("Password reset with valid email shows proper validation message", () => {
-    cy.checkElementContainsValue(loginSelectors.containers.titleBox, "Can't log in?");
+    cy.checkElementContainsValue(
+      loginSelectors.containers.titleBox,
+      "Can't log in?"
+    );
     cy.fillInputField(loginSelectors.inputs.email, user.email.correct);
-    cy.findByRole("button", { name: /send link/i }).should("be.visible").click();
+    cy.findByRole("button", { name: /send link/i })
+      .should("be.visible")
+      .click();
     cy.checkIfInputHasAnError(loginSelectors.inputs.email, false);
     cy.findByRole("button", { name: /sent/i }).should("be.visible");
   });
 
   it("User is able to clear email input on password rest", () => {
-    cy.checkElementContainsValue(loginSelectors.containers.titleBox, "Can't log in?");
+    cy.checkElementContainsValue(
+      loginSelectors.containers.titleBox,
+      "Can't log in?"
+    );
     cy.fillInputField(loginSelectors.inputs.email, user.email.correct);
     cy.clickOn(loginSelectors.buttons.inputClear);
     cy.checkIfInputIsEmpty(loginSelectors.inputs.email);
   });
 
   it("User doesn't see validation errors after clearing email input on password reset", () => {
-    cy.checkElementContainsValue(loginSelectors.containers.titleBox, "Can't log in?");
+    cy.checkElementContainsValue(
+      loginSelectors.containers.titleBox,
+      "Can't log in?"
+    );
     cy.fillInputField(loginSelectors.inputs.email, user.email.withoutDomain);
-    cy.findByRole("button", { name: /send link/i }).should("be.visible").click();
+    cy.findByRole("button", { name: /send link/i })
+      .should("be.visible")
+      .click();
     cy.checkIfTextIsShown(
       commonSelectors.alerts.errorMessage,
       ALERTS.invalidEmail()

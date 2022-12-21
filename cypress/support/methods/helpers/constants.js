@@ -1,5 +1,6 @@
 export const API = {
     LOGIN: "/api/authenticate/primary/password/prove/",
+    PASSWORD_RESET: "/api/authenticate/password_reset/init/",
 }
 
 export const ALERTS = {
