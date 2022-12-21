@@ -1,2 +1,2 @@
 # Cypress
-Code challange
+Code challenge
